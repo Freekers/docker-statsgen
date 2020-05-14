@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  statsgen:
+    image: freekers/docker-statsgen:latest
+    container_name: statsgen
+    restart: always
+    volumes:
+     - /path/to/statsgen:/root/statsgen/drive_c/statsgen
+     #Uncomment below if running on the same machine as the gameserver
+     #- /path/to/gameserver/games_mp.log:/root/statsgen/drive_c/statsgen/games_mp.log:ro
