@@ -28,9 +28,9 @@ Use the included docker-compose.yml to start the container.
 If you need to change anything to your statsgen2.ini configuration file, make sure to stop the Docker container first before doing so.
 
 # Advanced Usage using crontab
-If you want, you can use cron to schedule Statsgen to run. To do so, you'll have to build the Docker image yourself and add `-runonce` at the end of the `ENTRYPOINT`.   
+If you want, you can use cron to schedule Statsgen to run. To do so, you'll have to build the Docker image yourself and add ` -runonce` at the end of the `ENTRYPOINT`.   
 This will cause statsgen to start, perform a stats run, then exit and thus the container will stop.  
-Make sure to remove  `restart: always` from the compose file as well, else it will keep restarting infitenly.
+Make sure to remove  `restart: always` from the compose file as well, else it will keep restarting infinitely.
 
 Schedule the Docker using `crontab -e` as follows:  
 `33 3 * * * /usr/local/bin/docker-compose -f /opt/statsgen2/docker-compose.yml start > /dev/null`

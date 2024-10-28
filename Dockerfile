@@ -1,26 +1,31 @@
-FROM ubuntu:18.04
+FROM ubuntu:noble
 
-ENV DEBIAN_FRONTEND noninteractive
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    WINEDEBUG=fixme-all \
+    WINEPREFIX=/root/statsgen \
+    WINEARCH=win32
 
-# Install Wine & Winetricks
+# Install dependencies and clean up
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install --no-install-recommends ca-certificates xvfb wine32 winetricks && \ 
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get -y install --no-install-recommends \
+        ca-certificates \
+        xvfb \
+        wine32 \
+        cabextract \
+        winetricks && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Turn off Fixme warnings
-ENV WINEDEBUG=fixme-all
+# Copy installation script and run it
+COPY install-vcrun6.sh /root/statsgen/install-vcrun6.sh
+RUN mkdir -p /root/statsgen/drive_c/statsgen && \
+    bash /root/statsgen/install-vcrun6.sh && \
+    rm /root/statsgen/install-vcrun6.sh
 
-# Setup a Wine prefix
-ENV WINEPREFIX=/root/statsgen
-ENV WINEARCH=win32
+# Run Wine configuration
 RUN winecfg
 
-# Install Visual C++ Redistributable
-COPY install-vcrun6.sh /root/statsgen
-RUN mkdir /root/statsgen/drive_c/statsgen && bash /root/statsgen/install-vcrun6.sh
-
-#Run statsgen
-ENTRYPOINT xvfb-run -a wine "/root/statsgen/drive_c/statsgen/statsgen2.exe"
+# Set entrypoint
+ENTRYPOINT ["xvfb-run", "-a", "wine", "/root/statsgen/drive_c/statsgen/statsgen2.exe"]
