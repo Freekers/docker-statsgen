@@ -28,4 +28,4 @@ RUN mkdir -p /root/statsgen/drive_c/statsgen && \
 RUN winecfg
 
 # Set entrypoint
-ENTRYPOINT ["xvfb-run", "-a", "wine", "/root/statsgen/drive_c/statsgen/statsgen2.exe"]
+ENTRYPOINT xvfb-run -a wine "/root/statsgen/drive_c/statsgen/statsgen2.exe"
